@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Warn before quitting</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            color: #666;
+        }
+
+        .container {
+            max-width: 450px;
+            margin: auto;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #lock {
+            display: none;
+        }
+
+        #lock+label {
+            display: inline-block;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='39px' height='56px' version='1.1' content='' style='background-color: rgb(255, 255, 255);'><defs/><g transform='translate(0.5,0.5)'><path d='M 29.8 25.04 L 29.8 14.7 C 29.8 9.82 25.56 4.21 19.04 4.21 C 12.49 4.21 8.2 9.62 8.2 14.81 L 8.2 17.59 L 3.73 17.6 L 3.73 14.84 C 3.73 5.95 11.32 -0.23 18.8 -0.23 C 27.73 -0.23 34.27 6.86 34.27 14.97 L 34.27 25.04 L 35.09 25.04 C 36.6 25.04 38 26.33 38 28 L 38 51.07 C 38 52.68 36.62 54 35.07 54 L 2.93 54 C 1.37 54 0 52.65 0 51.09 L 0 27.92 C 0 26.39 1.32 25.04 3 25.04 Z' fill='%23505050' stroke='none' pointer-events='none'/></g></svg>");
+            background-position: center 0px;
+            background-size: 100% auto;
+            width: 100px;
+            height: 200px;
+            background-repeat: no-repeat;
+        }
+
+        #lock:checked+label {
+            background-position: center 5px;
+
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='39px' height='53px' version='1.1' content='' style='background-color: rgb(255, 255, 255);'><defs/><g transform='translate(0.5,0.5)'><path d='M 29.8 23.03 L 29.8 14.86 C 29.8 9.98 25.54 4.46 19.02 4.46 C 12.46 4.46 8.2 9.95 8.2 15.14 L 8.2 23.03 Z M 2.93 52 C 1.37 52 0 50.65 0 49.1 L 0 25.92 C 0 24.4 1.37 23.03 2.87 23.03 L 3.73 23.03 L 3.73 14.99 C 3.73 7.08 10.56 0 18.8 0 C 27.73 0 34.27 7 34.27 15.01 L 34.27 23.03 L 35.09 23.03 C 36.6 23.03 38 24.33 38 26 L 38 49.07 C 38 50.68 36.62 52 35.07 52 Z' fill='%23505050' stroke='none' pointer-events='none'/></g></svg>");
+        }
+
+        #footer {
+            position: fixed;
+            z-index: 100;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8em;
+            padding: 0.5em;
+        }
+
+        #footer,
+        #footer a {
+            color: #CCC;
+            background-color: #666;
+        }
+
+        #more {
+            text-align: left;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+        <h1>Warn before quitting</h1>
+        <p>
+            If you click the lock below, this page will show a warning when you try to close it.
+        </p>
+        <noscript>This requires JavaScript to work.</noscript>
+
+        <form id="lock-form">
+            <input id="lock" name="lock" type="checkbox">
+            <label for="lock"></label>
+        </form>
+        <p>
+            This prevents you from accidently quitting your browser and losing all your open tabs.
+        </p>
+        <div id="more" class="hidden">
+            <h2>FAQ</h2>
+            <p>
+                <b>Why do I have to click the lock?</b>
+                <br> This page uses the onbeforeunload handler. This handler is ignored by browsers unless some kind of user
+                interaction has happend. </p>
+            <p>
+                <b>Wait, isn't this built into browsers?</b>
+                <br>Yes, in Google Chrome, my primary browser, it was built in. Then it was removed. At some point, it was reintroduced. I realized that <i>while</i> building this page.
+            </p>
+            <h2>Privacy</h2>
+            <p>This page is intentionally kept simple and does not use cookies, external resources or third party analytics.</p>
+            <p>This page is hosted on
+                <a target="_blank" rel="noopener noreferrer" href="https://pages.github.com/">GitHub Pages</a>. To learn what information Github collects, visit their
+                <a target="_blank" rel="noopener noreferrer"
+                    href="https://help.github.com/articles/github-privacy-statement/">Privacy Policy.</a>
+            </p>
+            <p></p>
+        </div>
+
+    </div>
+    <div id="footer">Brought to you by
+        <a target="_blank" rel="noopener noreferrer" href="https://twitter.com/@danielhepper">Daniel Hepper</a> //
+        <a target="_blank" href="https://github.com/dhepper/warnbeforequitting">Source</a> //
+        <a target="_blank" href="https://epicco.de">Imprint</a> //
+        <a href="javascript:showMore()">FAQ &amp; Privacy</a>
+    </div>
+    <script>
+        (function () {
+            var lock = document.getElementById('lock');
+            lock.onclick = function () {
+                if (lock.checked) {
+                    window.onbeforeunload = function (e) {
+                        return 'Do you really want to close this page? ';
+                    };
+                } else {
+                    window.onbeforeunload = undefined;
+                }
+            };
+            window.showMore = function () {
+                document.getElementById("more").className = "";
+            }
+        })();
+    </script>
+</body>
+
+</html>
